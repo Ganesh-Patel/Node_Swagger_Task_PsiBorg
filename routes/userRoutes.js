@@ -1,7 +1,8 @@
 import express from 'express';
 import { registerUser, loginUser, getUserProfile, logoutUser } from '../controllers/userController.js';
 import { rateLimiter } from '../middlewares/rateLimitMiddleware.js';
-import { authenticateUser, authorizeRoles } from '../middlewares/authMiddleware.js';
+import { authenticateUser } from '../middlewares/authMiddleware.js';
+import {authorizeRoles} from '../middlewares/roleMiddleware.js'
 
 const loginLimiter = rateLimiter(15 * 60 * 1000, 5, 'Too many login attempts, please try again later.');
 
@@ -75,6 +76,24 @@ userRoutes.post('/login', loginLimiter, loginUser);
 
 /**
  * @swagger
+ * /api/users/logout:
+ *   post:
+ *     summary: Logout the authenticated user
+ *     description: Logs out the user by invalidating the JWT token.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User logged out successfully
+ *       401:
+ *         description: Unauthorized (user not authenticated)
+ *       500:
+ *         description: Internal server error
+ */
+userRoutes.post('/logout', authenticateUser, logoutUser);
+
+/**
+ * @swagger
  * /api/users/profile:
  *   get:
  *     summary: Get the profile of the authenticated user
@@ -105,24 +124,6 @@ userRoutes.post('/login', loginLimiter, loginUser);
  *       500:
  *         description: Internal server error
  */
-userRoutes.get('/profile', authenticateUser, getUserProfile);
-
-/**
- * @swagger
- * /api/users/logout:
- *   post:
- *     summary: Logout the authenticated user
- *     description: Logs out the user by invalidating the JWT token.
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: User logged out successfully
- *       401:
- *         description: Unauthorized (user not authenticated)
- *       500:
- *         description: Internal server error
- */
-userRoutes.post('/logout', authenticateUser, logoutUser);
+userRoutes.get('/profile', authenticateUser, authorizeRoles('admin'), getUserProfile);
 
 export default userRoutes;

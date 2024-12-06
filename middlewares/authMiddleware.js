@@ -26,13 +26,3 @@ export const authenticateUser = async (req, res, next) => {
         res.status(401).json({ message: 'Unauthorized' });
     }
 };
-
-// Role-based access control middleware
-export const authorizeRoles = (roles) => {
-    return (req, res, next) => {
-        if (!roles.includes(req.user.roles[0])) {
-            return res.status(403).json({ message: 'Access denied' });
-        }
-        next();
-    };
-};
