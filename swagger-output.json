@@ -1,5 +1,5 @@
 {
-  "swagger": "2.0",
+  "swagger": "3.0",
   "info": {
     "title": "Task Management API",
     "description": "API for user registration, login, profile management, and task handling.",
@@ -310,7 +310,7 @@
   }
 }
   ,
-    "/tasks/create": {
+    "/tasks": {
       "post": {
         "tags": ["Tasks Management"],
         "summary": "Create a new task",
