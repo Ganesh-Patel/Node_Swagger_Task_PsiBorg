@@ -8,6 +8,8 @@ import swaggerDocument from './swagger-output.json' assert { type: 'json' };
 import userRoutes from './routes/userRoutes.js';
 import connectDB from './config/connectToDatabase.js';
 import userManagementRoutes from './routes/userManagementRoutes.js';
+import taskRoutes from './routes/taskRoutes.js';
+import taskAssignRoutes from './routes/taskAssignmentRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -30,6 +32,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Routes
 app.use('/api/users', userRoutes);  
 app.use('/api/admin/', userManagementRoutes); 
+app.use('/admin/task', taskRoutes);
+app.use('/admin/taskAssigen', taskAssignRoutes);
 
 // Error-handling middleware
 app.use((err, req, res, next) => {
