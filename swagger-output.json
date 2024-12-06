@@ -1,5 +1,5 @@
 {
-  "swagger": "3.1.0",
+  "swagger": "2.0",
   "info": {
     "title": "Task Management API",
     "description": "API for user registration, login, profile management, and task handling.",
@@ -14,7 +14,7 @@
     },
     {
       "name": "User Management",
-      "description": "Endpoints for managing users, including profile updates and retrieval.(allowed only for Admin)"
+      "description": "Endpoints for managing users, including profile updates and retrieval (allowed only for Admin)."
     },
     {
       "name": "Tasks Management",
@@ -308,8 +308,7 @@
       }
     }
   }
-}
-  ,
+},
     "/tasks": {
       "post": {
         "tags": ["Tasks Management"],
