@@ -13,9 +13,9 @@ export const assignTask = async (req, res) => {
     if (!task || !user) {
       return res.status(404).json({ message: 'Task or User not found' });
     }
-
+    console.log(req.user)
     // Check if the user has either 'manager' or 'admin' role
-    if (req.user.role !== 'manager' && req.user.role !== 'admin') {
+    if (req.user.roles[0] !== 'manager' && req.user.role[0] !== 'admin') {
       return res.status(403).json({ message: 'You are not authorized to assign tasks' });
     }
 
