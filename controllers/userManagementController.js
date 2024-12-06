@@ -65,7 +65,7 @@ export const deleteUser = async (req, res) => {
   // Get all users
   export const getAllUsers = async (req, res) => {
     try {
-      const users = await User.find();  // You can apply pagination or filtering here as needed
+      const users = await User.find();
       res.status(200).json({ users });
     } catch (err) {
       res.status(500).json({ message: 'Error fetching users', error: err.message });
