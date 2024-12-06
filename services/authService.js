@@ -13,7 +13,7 @@ export const comparePassword = async (password, hashedPassword) => await bcrypt.
 
 // Generate JWT Token
 export const generateToken = (user) => {
-    return jwt.sign({ userId: user._id, roles: user.roles }, process.env.SECRET, { expiresIn: '1h' });
+    return jwt.sign({ userId: user._id, roles: user.roles}, process.env.SECRET, { expiresIn: '1h' });
 };
 
 // Find user by email
