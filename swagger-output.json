@@ -221,48 +221,56 @@
         }
       }
     },
-    "/admin/change-role/{id}": {
-      "put": {
-        "tags": ["User Management"],
-        "summary": "Change a user's role",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "role": {
-                    "type": "string",
-                    "enum": ["admin", "manager", "user"]
-                  }
-                }
-              }
-            }
-          }
+  "/admin/change-role/{id}": {
+  "put": {
+    "tags": ["User Management"],
+    "summary": "Change a user's role",
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
         },
-        "responses": {
-          "200": { "description": "User role updated successfully." },
-          "404": { "description": "User not found." },
-          "500": { "description": "Internal server error." }
+        "description": "The ID of the user whose role is being changed."
+      },
+      {
+        "name": "body",
+        "in": "body",
+        "required": true,
+        "description": "The new role for the user.",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "role": {
+              "type": "string",
+              "enum": ["admin", "manager", "user"],
+              "description": "The new role to assign to the user."
+            }
+          },
+          "required": ["role"]
         }
       }
+    ],
+    "responses": {
+      "200": {
+        "description": "User role updated successfully."
+      },
+      "404": {
+        "description": "User not found."
+      },
+      "500": {
+        "description": "Internal server error."
+      }
     }
+  }
+}
   ,
     "/tasks/create": {
       "post": {

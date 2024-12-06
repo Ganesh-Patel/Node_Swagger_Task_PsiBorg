@@ -84,7 +84,7 @@ export const deleteUser = async (req, res) => {
         return res.status(404).json({ message: 'User not found' });
       }
   
-      user.role = role;
+      user.roles[0] = role;
       await user.save();
   
       res.status(200).json({ message: 'User role updated successfully', user });
