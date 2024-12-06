@@ -147,31 +147,26 @@
             "bearerAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "username": { "type": "string" },
-                  "email": { "type": "string" },
-                  "password": { "type": "string" },
-                  "role": {
-                    "type": "string",
-                    "enum": ["admin", "manager", "user"]
-                  }
-                }
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": { "type": "string", "example": "GaneshPatel123" },
+                "email": { "type": "string", "example": "ganesh123@gmail.com" },
+                "password": { "type": "string", "example": "Ganesh@123" }
               }
             }
           }
-        },
+        ],
         "responses": {
-          "201": { "description": "User added successfully." },
-          "400": { "description": "User already exists." },
-          "500": { "description": "Internal server error." }
+          "201": { "description": "User registered successfully." },
+          "400": { "description": "Invalid input." },
+          "500": { "description": "Server error." }
         }
-      }
     },
     "/admin/delete-user/{id}": {
       "delete": {
