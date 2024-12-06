@@ -27,11 +27,7 @@ const doc = {
             description: 'APIs related to user registration, login, and profile management',
         },
         {
-            name: 'Admin',
-            description: 'APIs for administrative tasks like managing users and roles',
-        },
-        {
-            name: 'Tasks',
+            name: 'Tasks Management',
             description: 'APIs for task management including creation, assignment, and updates',
         },
     ],

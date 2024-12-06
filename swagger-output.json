@@ -17,8 +17,8 @@
       "description": "Endpoints for managing users, including profile updates and retrieval.(allowed only for Admin)"
     },
     {
-      "name": "Tasks",
-      "description": "Endpoints for managing tasks."
+      "name": "Tasks Management",
+      "description": "APIs for task management including creation, assignment, and updates."
     }
   ],
   "schemes": ["https"],
@@ -270,7 +270,7 @@
   ,
     "/tasks/create": {
       "post": {
-        "tags": ["Tasks"],
+        "tags": ["Tasks Management"],
         "summary": "Create a new task.",
         "description": "Add a new task to the system.",
         "parameters": [
