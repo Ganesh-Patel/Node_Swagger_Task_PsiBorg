@@ -31,9 +31,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Routes
 app.use('/api/users', userRoutes);  
-app.use('/api/admin/', userManagementRoutes); 
-app.use('/admin/task', taskRoutes);
-app.use('/admin/taskAssigen', taskAssignRoutes);
+app.use('/api/admin', userManagementRoutes); 
+app.use('/api/tasks', taskRoutes);
+app.use('/api/taskAssigen', taskAssignRoutes);
 
 // Error-handling middleware
 app.use((err, req, res, next) => {

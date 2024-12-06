@@ -30,6 +30,10 @@ const doc = {
             name: 'Tasks Management',
             description: 'APIs for task management including creation, assignment, and updates',
         },
+        {
+            name: 'Tasks Assigenment',
+            description: 'APIs for task assignment.',
+        },
     ],
     securityDefinitions: {
         bearerAuth: {
