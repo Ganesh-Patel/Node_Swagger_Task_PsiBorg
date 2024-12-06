@@ -8,7 +8,7 @@ import {
   getUserById, 
   getAllUsers, 
   changeUserRole 
-} from '../controllers/userController.js';
+} from '../controllers/userManagementController.js';
 
 const userManagementRoutes = express.Router();
 
