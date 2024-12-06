@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+
 import jwt from 'jsonwebtoken';
 import User from '../models/userModel.js';
 import sendEmail from '../services/sendEmail.js';
@@ -50,7 +50,7 @@ export const loginUser = async (req, res) => {
         sameSite: "none",
         maxAge: 3600000,
       }).status(200)
-      .json({
+      .json({user,
         message: "Login Successful"  
       });
     } catch (error) {
