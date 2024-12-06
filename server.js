@@ -29,7 +29,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Routes
 app.use('/api/users', userRoutes);  
-app.use('/api/admin/uam', userManagementRoutes); 
+app.use('/api/admin/', userManagementRoutes); 
 
 // Error-handling middleware
 app.use((err, req, res, next) => {
