@@ -447,7 +447,7 @@
         }
       }
     },
-    "/tasks/taskAssigen/assign": {
+    "/taskAssigen/assign": {
       "post": {
         "tags": ["Task Assignment"],
         "summary": "Assign a task to a user",
