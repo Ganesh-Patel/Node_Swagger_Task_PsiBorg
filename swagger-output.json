@@ -71,7 +71,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "email": { "type": "string", "example": "GaneshPatel123" },
+                "email": { "type": "string", "example": "ganesh123@gmail.com" },
                 "password": { "type": "string", "example": "Ganesh@123" }
               }
             }
