@@ -447,7 +447,7 @@
         }
       }
     },
-    "/tasks/assign": {
+    "/tasks/taskAssigen/assign": {
       "post": {
         "tags": ["Task Assignment"],
         "summary": "Assign a task to a user",
@@ -518,7 +518,7 @@
         }
       }
     },
-    "/tasks/unassign": 
+    "/tasks/taskAssigen/unassign": 
     {
       "delete": {
         "tags": ["Task Assignment"],
