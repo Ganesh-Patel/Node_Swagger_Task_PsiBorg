@@ -309,38 +309,93 @@
     }
   }
 },
-    "/tasks": {
-      "post": {
-        "tags": ["Tasks Management"],
-        "summary": "Create a new task",
-        "description": "Add a new task to the system.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
+  "/tasks": {
+    "post": {
+      "tags": ["Tasks Management"],
+      "summary": "Create a new task",
+      "description": "Add a new task to the system.",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
             "schema": {
               "type": "object",
               "properties": {
-                "title": { "type": "string", "example": "New Task" },
-                "description": { "type": "string", "example": "Details about the task." },
-                "deadline": { "type": "string", "format": "date-time", "example": "2024-12-31T23:59:59Z" }
+                "title": {
+                  "type": "string",
+                  "example": "New Task"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Details about the task."
+                },
+                "dueDate": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2024-12-31T23:59:59Z"
+                },
+                "priority": {
+                  "type": "string",
+                  "enum": ["low", "medium", "high"],
+                  "example": "medium"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": ["pending", "in-progress", "completed"],
+                  "example": "pending"
+                }
+              },
+              "required": ["title", "description", "dueDate"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Task created successfully.",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Task created successfully",
+                "task": {
+                  "_id": "64a0b4c9d8d1b8e1bda12345",
+                  "title": "New Task",
+                  "description": "Details about the task.",
+                  "dueDate": "2024-12-31T23:59:59Z",
+                  "priority": "medium",
+                  "status": "pending",
+                  "user": "64a0b4c9d8d1b8e1bda67890",
+                  "createdAt": "2024-12-06T12:00:00Z",
+                  "updatedAt": "2024-12-06T12:00:00Z"
+                }
               }
             }
           }
-        ],
-        "responses": {
-          "201": { "description": "Task created successfully." },
-          "400": { "description": "Invalid input." },
-          "500": { "description": "Server error." }
+        },
+        "400": {
+          "description": "Invalid input.",
+          "content": {
+            "application/json": {
+              "example": { "message": "Missing required fields" }
+            }
+          }
+        },
+        "500": {
+          "description": "Server error.",
+          "content": {
+            "application/json": {
+              "example": { "message": "Error creating task", "error": "Database connection failed" }
+            }
+          }
         }
       }
-    },
+    }
+  },
     "/tasks/": {
       "get": {
         "tags": ["Tasks Management"],

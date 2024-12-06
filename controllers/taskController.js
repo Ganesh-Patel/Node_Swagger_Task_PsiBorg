@@ -5,13 +5,18 @@ import User from '../models/userModel.js'; // Assuming User model exists
 export const createTask = async (req, res) => {
   try {
     const { title, description, dueDate, priority, status } = req.body;
+
+    if (!title || !description || !dueDate) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+
     const newTask = new Task({
       title,
       description,
       dueDate,
       priority,
       status,
-      user: req.user.id, // Associate task with the authenticated user
+      user: req.user.id, // Assuming `req.user` is populated from authentication middleware
     });
 
     await newTask.save();
