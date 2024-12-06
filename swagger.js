@@ -12,7 +12,7 @@ const doc = {
         description: 'API for demonstrating user registration, login, and profile management',
         version: '1.0.0',
     },
-    host: 'swagger-demo-a3rv.onrender.com',  // Change it to your live URL
+    host: 'https://node-swagger-task-psiborg.onrender.com',  // Change it to your live URL
     schemes: ['https'], // Adjust it to 'https' if using secure protocol
     basePath: '/api/users',
     consumes: ['application/json'],

@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://swagger-demo-a3rv.onrender.com/api"
+      "url": "https://node-swagger-task-psiborg.onrender.com/api"
     }
   ],
   "components": {
