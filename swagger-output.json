@@ -413,9 +413,29 @@
             "schema": {
               "type": "object",
               "properties": {
-                "title": { "type": "string", "example": "Updated Task" },
-                "description": { "type": "string", "example": "Updated details about the task." },
-                "deadline": { "type": "string", "format": "date-time", "example": "2024-12-31T23:59:59Z" }
+                "title": {
+                  "type": "string",
+                  "example": "New Task"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Details about the task."
+                },
+                "dueDate": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2024-12-31T23:59:59Z"
+                },
+                "priority": {
+                  "type": "string",
+                  "enum": ["low", "medium", "high"],
+                  "example": "medium"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": ["pending", "in-progress", "completed"],
+                  "example": "pending"
+                }
               }
             }
           }
