@@ -314,6 +314,11 @@
         "tags": ["Tasks Management"],
         "summary": "Create a new task",
         "description": "Add a new task to the system.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "body",
@@ -341,6 +346,11 @@
         "tags": ["Tasks Management"],
         "summary": "Retrieve task details by ID",
         "description": "Fetch details of a specific task using its ID.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -362,6 +372,11 @@
         "tags": ["Tasks Management"],
         "summary": "Update a task",
         "description": "Modify the details of an existing task.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -396,6 +411,11 @@
         "tags": ["Task Assignment"],
         "summary": "Assign a task to a user",
         "description": "Assign a specific task to a user by linking the task ID and user ID.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "body",
@@ -422,6 +442,11 @@
         "tags": ["Task Assignment"],
         "summary": "Get tasks assigned to a user",
         "description": "Fetch all tasks assigned to a specific user using their user ID.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "userId",
