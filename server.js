@@ -18,7 +18,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'], 
 }));
 app.use(cookieParser());
-// app.use(express.json());
+app.set('trust proxy', true);
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 connectDB();
