@@ -4,7 +4,6 @@ import { authorizeRoles } from '../middlewares/roleMiddleware.js';  // Role-base
 import { 
   addUser, 
   deleteUser, 
-  updateUser, 
   getUserById, 
   getAllUsers, 
   changeUserRole 
@@ -75,44 +74,6 @@ userManagementRoutes.post('/add-user', authenticateUser, authorizeRoles('admin')
  *         description: Internal server error
  */
 userManagementRoutes.delete('/delete-user/:id', authenticateUser, authorizeRoles('admin'), deleteUser);
-
-/**
- * @swagger
- * /admin/update-user/{id}:
- *   put:
- *     summary: Update user details
- *     tags: [UserManagement]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               username:
- *                 type: string
- *               email:
- *                 type: string
- *               role:
- *                 type: string
- *                 enum: [admin, manager, user]
- *     responses:
- *       200:
- *         description: User updated successfully
- *       404:
- *         description: User not found
- *       500:
- *         description: Internal server error
- */
-userManagementRoutes.put('/update-user/:id', authenticateUser, authorizeRoles('admin'), updateUser);
 
 /**
  * @swagger
