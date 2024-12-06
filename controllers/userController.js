@@ -50,7 +50,7 @@ export const loginUser = async (req, res) => {
         sameSite: "none",
         maxAge: 3600000,
       }).status(200)
-      .json({user,
+      .json({id:user._id,email:user.email,role:user.roles[0],
         message: "Login Successful"  
       });
     } catch (error) {
