@@ -5,16 +5,21 @@ export const assignTask = async (req, res) => {
   try {
     const { taskId, userId } = req.body; 
 
-
+    // Fetch the task and user based on the provided IDs
     const task = await Task.findById(taskId);
     const user = await User.findById(userId);
 
+    // Check if the task or user exists
     if (!task || !user) {
       return res.status(404).json({ message: 'Task or User not found' });
     }
-    if (req.user.role !== 'manager') {
+
+    // Check if the user has either 'manager' or 'admin' role
+    if (req.user.role !== 'manager' && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'You are not authorized to assign tasks' });
     }
+
+    // Assign the task to the user
     task.assignedTo = userId;
     await task.save();
 
@@ -23,6 +28,7 @@ export const assignTask = async (req, res) => {
     res.status(500).json({ message: 'Error assigning task', error: err.message });
   }
 };
+
 
 // View assigned tasks
 export const viewAssignedTasks = async (req, res) => {
