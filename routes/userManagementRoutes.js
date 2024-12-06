@@ -12,22 +12,180 @@ import {
 
 const userManagementRoutes = express.Router();
 
-// Admin can add a new user
+/**
+ * @swagger
+ * tags:
+ *   name: User Management
+ *   description: APIs related to user management
+ */
+/**
+ * @swagger
+ * /admin/add-user:
+ *   post:
+ *     summary: Add a new user
+ *     tags: [UserManagement]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: [admin, manager, user]
+ *     responses:
+ *       201:
+ *         description: User added successfully
+ *       400:
+ *         description: User already exists
+ *       500:
+ *         description: Internal server error
+ */
 userManagementRoutes.post('/add-user', authenticateUser, authorizeRoles('admin'), addUser);
 
-// Admin can delete a user by ID
+/**
+ * @swagger
+ * /admin/delete-user/{id}:
+ *   delete:
+ *     summary: Delete a user by ID
+ *     tags: [UserManagement]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
 userManagementRoutes.delete('/delete-user/:id', authenticateUser, authorizeRoles('admin'), deleteUser);
 
-// Admin can update a user's details (e.g., role, name, etc.)
+/**
+ * @swagger
+ * /admin/update-user/{id}:
+ *   put:
+ *     summary: Update user details
+ *     tags: [UserManagement]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: [admin, manager, user]
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
 userManagementRoutes.put('/update-user/:id', authenticateUser, authorizeRoles('admin'), updateUser);
 
-// Admin can get details of a single user
+/**
+ * @swagger
+ * /admin/user/{id}:
+ *   get:
+ *     summary: Get details of a single user
+ *     tags: [UserManagement]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User details retrieved successfully
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
 userManagementRoutes.get('/user/:id', authenticateUser, authorizeRoles('admin'), getUserById);
 
-// Admin can get a list of all users
+/**
+ * @swagger
+ * /admin/users:
+ *   get:
+ *     summary: Get a list of all users
+ *     tags: [UserManagement]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of users retrieved successfully
+ *       500:
+ *         description: Internal server error
+ */
 userManagementRoutes.get('/users', authenticateUser, authorizeRoles('admin'), getAllUsers);
 
-// Admin can change the role of a user
+/**
+ * @swagger
+ * /admin/change-role/{id}:
+ *   put:
+ *     summary: Change a user's role
+ *     tags: [UserManagement]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               role:
+ *                 type: string
+ *                 enum: [admin, manager, user]
+ *     responses:
+ *       200:
+ *         description: User role updated successfully
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
 userManagementRoutes.put('/change-role/:id', authenticateUser, authorizeRoles('admin'), changeUserRole);
 
 export default userManagementRoutes;

@@ -1,132 +1,118 @@
 {
-  "openapi": "3.0.0",
+  "swagger": "2.0",
   "info": {
     "title": "Task Management API",
-    "description": "API for managing users, tasks, and other resources.",
+    "description": "API for user registration, login, profile management, and task handling.",
     "version": "1.0.0"
   },
-  "servers": [
+  "host": "node-swagger-task-psiborg.onrender.com",
+  "basePath": "/api",
+  "tags": [
     {
-      "url": "https://node-swagger-task-psiborg.onrender.com/api"
+      "name": "User Authentication",
+      "description": "Endpoints for user registration, login, and logout."
+    },
+    {
+      "name": "User Management",
+      "description": "Endpoints for managing users, including profile updates and retrieval.(allowed only for Admin)"
+    },
+    {
+      "name": "Admin",
+      "description": "Administrative endpoints for user and role management."
+    },
+    {
+      "name": "Tasks",
+      "description": "Endpoints for managing tasks."
     }
   ],
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "Authorization",
-        "description": "JWT authorization header"
-      }
+  "schemes": ["https"],
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT token for authorization."
     }
   },
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ],
   "paths": {
     "/users/register": {
       "post": {
-        "summary": "User Registration",
-        "description": "Register a new user by providing a username, email, and password.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "username": {
-                    "type": "string",
-                    "example": "johndoe"
-                  },
-                  "email": {
-                    "type": "string",
-                    "example": "johndoe@example.com"
-                  },
-                  "password": {
-                    "type": "string",
-                    "example": "password123"
-                  }
-                },
-                "required": ["username", "email", "password"]
+        "tags": ["User Authentication"],
+        "summary": "Register a new user.",
+        "description": "Create a new user account by providing username, email, and password.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": { "type": "string", "example": "GaneshPatel123" },
+                "email": { "type": "string", "example": "ganesh123@gmail.com" },
+                "password": { "type": "string", "example": "Ganesh@123" }
               }
             }
           }
-        },
+        ],
         "responses": {
-          "201": {
-            "description": "User registered successfully"
-          },
-          "400": {
-            "description": "Bad Request - Invalid input"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
+          "201": { "description": "User registered successfully." },
+          "400": { "description": "Invalid input." },
+          "500": { "description": "Server error." }
         }
       }
     },
     "/users/login": {
       "post": {
-        "summary": "User Login",
-        "description": "Login a user by providing email and password.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "example": "johndoe@example.com"
-                  },
-                  "password": {
-                    "type": "string",
-                    "example": "password123"
-                  }
-                },
-                "required": ["email", "password"]
+        "tags": ["User Authentication"],
+        "summary": "Login a user.",
+        "description": "Authenticate a user using email and password.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": { "type": "string", "example": "GaneshPatel123" },
+                "password": { "type": "string", "example": "Ganesh@123" }
               }
             }
           }
-        },
+        ],
         "responses": {
-          "200": {
-            "description": "User logged in successfully"
-          },
-          "400": {
-            "description": "Bad Request - Invalid credentials"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
+          "200": { "description": "Login successful, JWT token issued." },
+          "400": { "description": "Invalid credentials." },
+          "500": { "description": "Server error." }
         }
       }
     },
     "/users/logout": {
       "post": {
-        "summary": "User Logout",
-        "description": "Logs out the user by clearing the authentication token stored in the cookie.",
-        "responses": {
-          "200": {
-            "description": "User logged out successfully"
-          },
-          "400": {
-            "description": "Bad Request - Token not found or already expired"
-          },
-          "500": {
-            "description": "Internal Server Error"
+        "tags": ["User Authentication"],
+        "summary": "Logout a user.",
+        "description": "Invalidate the user's current JWT token.",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "type": "string",
+            "required": true,
+            "description": "Bearer token for authorization."
           }
+        ],
+        "responses": {
+          "200": { "description": "Logout successful." },
+          "401": { "description": "Unauthorized." },
+          "500": { "description": "Server error." }
         }
       }
-  },
-  
+    },
     "/users/profile": {
       "get": {
         "summary": "Get User Profile",
+        "tags": ["User Authentication"],
         "description": "Retrieve the profile details of the logged-in user.",
         "parameters": [
           {
@@ -156,50 +142,15 @@
         }
       }
     },
-    "/tasks": {
-      "get": {
-        "summary": "Get Tasks",
-        "description": "Retrieve a list of all tasks.",
-        "responses": {
-          "200": {
-            "description": "List of tasks",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "title": {
-                        "type": "string",
-                        "example": "Task 1"
-                      },
-                      "description": {
-                        "type": "string",
-                        "example": "This is the first task"
-                      },
-                      "status": {
-                        "type": "string",
-                        "example": "pending"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
+   "/admin/add-user": {
       "post": {
-        "summary": "Create a Task",
-        "description": "Create a new task by providing the task details.",
+        "tags": ["User Management"],
+        "summary": "Add a new user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -207,34 +158,187 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "title": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "password": { "type": "string" },
+                  "role": {
                     "type": "string",
-                    "example": "New Task"
-                  },
-                  "description": {
-                    "type": "string",
-                    "example": "Task description here"
-                  },
-                  "status": {
-                    "type": "string",
-                    "example": "pending"
+                    "enum": ["admin", "manager", "user"]
                   }
-                },
-                "required": ["title", "description", "status"]
+                }
               }
             }
           }
         },
         "responses": {
-          "201": {
-            "description": "Task created successfully"
-          },
-          "400": {
-            "description": "Bad Request - Invalid input"
-          },
-          "500": {
-            "description": "Internal Server Error"
+          "201": { "description": "User added successfully." },
+          "400": { "description": "User already exists." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+    "/admin/delete-user/{id}": {
+      "delete": {
+        "tags": ["User Management"],
+        "summary": "Delete a user by ID",
+        "security": [
+          {
+            "bearerAuth": []
           }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "User deleted successfully." },
+          "404": { "description": "User not found." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+    "/admin/update-user/{id}": {
+      "put": {
+        "tags": ["User Management"],
+        "summary": "Update user details",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "role": {
+                    "type": "string",
+                    "enum": ["admin", "manager", "user"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "User updated successfully." },
+          "404": { "description": "User not found." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+    "/admin/user/{id}": {
+      "get": {
+        "tags": ["User Management"],
+        "summary": "Get details of a single user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "User details retrieved successfully." },
+          "404": { "description": "User not found." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+    "/admin/change-role/{id}": {
+      "put": {
+        "tags": ["User Management"],
+        "summary": "Change a user's role",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "enum": ["admin", "manager", "user"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "User role updated successfully." },
+          "404": { "description": "User not found." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    }
+  ,
+    "/tasks/create": {
+      "post": {
+        "tags": ["Tasks"],
+        "summary": "Create a new task.",
+        "description": "Add a new task to the system.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string", "example": "New Task" },
+                "description": { "type": "string", "example": "Details about the task." }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": { "description": "Task created successfully." },
+          "400": { "description": "Invalid input." },
+          "500": { "description": "Server error." }
         }
       }
     }

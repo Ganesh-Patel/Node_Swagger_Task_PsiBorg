@@ -4,7 +4,7 @@ import swaggerAutogen from 'swagger-autogen';
 const outputFile = './swagger-output.json';
 
 // The files where your route handlers are defined
-const endpointsFiles = ['./routes/userRoutes.js', './server.js']; // Adjust the routes file here
+const endpointsFiles = ['./routes/userRoutes.js', './routes/userManagementRoutes.js','./server.js']; // Adjust the routes file here
 
 const doc = {
     info: {
@@ -17,6 +17,24 @@ const doc = {
     basePath: '/api/users',
     consumes: ['application/json'],
     produces: ['application/json'],
+    tags: [
+        {
+            name: 'User Authentication',
+            description: 'APIs related to user registration, login, and profile management',
+        },
+        {
+            name: 'User Management',
+            description: 'APIs related to user registration, login, and profile management',
+        },
+        {
+            name: 'Admin',
+            description: 'APIs for administrative tasks like managing users and roles',
+        },
+        {
+            name: 'Tasks',
+            description: 'APIs for task management including creation, assignment, and updates',
+        },
+    ],
     securityDefinitions: {
         bearerAuth: {
             type: 'apiKey',

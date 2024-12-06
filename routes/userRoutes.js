@@ -10,10 +10,19 @@ const userRoutes = express.Router();
 
 /**
  * @swagger
+ * tags:
+ *   name: User Authentication
+ *   description: APIs related to user management
+ */
+
+/**
+ * @swagger
  * /api/users/register:
  *   post:
+ *     tags:
+ *       - User Authentication
  *     summary: Register a new user
- *     description: Allows a user to register by providing a username, email, and password.
+ *     description: Allows a user to register by providing a username, email, and password. A default user (`Ganesh Patel`) is already registered with the email `ganesh123@gmail.com`.
  *     requestBody:
  *       required: true
  *       content:
@@ -23,10 +32,13 @@ const userRoutes = express.Router();
  *             properties:
  *               username:
  *                 type: string
+ *                 example: Ganesh Patel
  *               email:
  *                 type: string
+ *                 example: ganesh123@gmail.com
  *               password:
  *                 type: string
+ *                 example: Ganesh@123
  *     responses:
  *       201:
  *         description: User registered successfully
@@ -35,14 +47,19 @@ const userRoutes = express.Router();
  *       500:
  *         description: Internal server error
  */
+
 userRoutes.post('/register', registerUser);
 
 /**
- * @swagger
+  * @swagger
  * /api/users/login:
  *   post:
+ *     tags:
+ *       - User Authentication
  *     summary: Login a user and get a JWT token
- *     description: Allows a user to login with email and password to receive a JWT token.
+ *     description: Allows a user to login with email and password to receive a JWT token. Use the default user credentials for testing:
+ *                  - Email: `ganesh123@gmail.com`
+ *                  - Password: `Ganesh@123`
  *     requestBody:
  *       required: true
  *       content:
@@ -52,8 +69,10 @@ userRoutes.post('/register', registerUser);
  *             properties:
  *               email:
  *                 type: string
+ *                 example: ganesh123@gmail.com
  *               password:
  *                 type: string
+ *                 example: Ganesh@123
  *     responses:
  *       200:
  *         description: User logged in successfully, returns JWT token
