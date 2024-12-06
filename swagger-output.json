@@ -221,7 +221,7 @@
         }
       }
     },
-"/admin/user/": {
+"/admin/users/": {
   "get": {
     "tags": ["User Management"],
     "summary": "Get details of all users",
