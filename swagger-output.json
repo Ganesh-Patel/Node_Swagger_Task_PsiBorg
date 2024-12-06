@@ -17,10 +17,6 @@
       "description": "Endpoints for managing users, including profile updates and retrieval.(allowed only for Admin)"
     },
     {
-      "name": "Admin",
-      "description": "Administrative endpoints for user and role management."
-    },
-    {
       "name": "Tasks",
       "description": "Endpoints for managing tasks."
     }
@@ -198,50 +194,6 @@
         ],
         "responses": {
           "200": { "description": "User deleted successfully." },
-          "404": { "description": "User not found." },
-          "500": { "description": "Internal server error." }
-        }
-      }
-    },
-    "/admin/update-user/{id}": {
-      "put": {
-        "tags": ["User Management"],
-        "summary": "Update user details",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "username": { "type": "string" },
-                  "email": { "type": "string" },
-                  "role": {
-                    "type": "string",
-                    "enum": ["admin", "manager", "user"]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": { "description": "User updated successfully." },
           "404": { "description": "User not found." },
           "500": { "description": "Internal server error." }
         }
