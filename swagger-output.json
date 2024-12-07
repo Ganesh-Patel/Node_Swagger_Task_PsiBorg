@@ -372,11 +372,6 @@
             "bearerAuth": []
           }
         ],
-        "parameters": [
-          {
-            
-          }
-        ],
         "responses": {
           "200": { "description": "Task details retrieved successfully." },
           "404": { "description": "Task not found." },
@@ -482,11 +477,6 @@
         "security": [
           {
             "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-        
           }
         ],
         "responses": {
