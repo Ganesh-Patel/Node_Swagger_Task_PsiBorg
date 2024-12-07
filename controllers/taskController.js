@@ -29,42 +29,97 @@ export const createTask = async (req, res) => {
 // Read Task(s) - with optional filters and sorting
 export const getTasks = async (req, res) => {
   try {
-    const { status, priority, sortBy } = req.query;
-    
-    let query = { user: req.user.id }; // Ensure the tasks are associated with the user
+    const userId = req.user.id;
+    const userRole = req.user.roles[0];
 
-    if (status) {
-      query.status = status;
+    let tasks;
+
+    if (userRole === 'admin') {
+      // Admin can view all tasks
+      tasks = await Task.find({});
+    } else if (userRole === 'manager') {
+      // Manager can view tasks assigned to their team members
+      const manager = await User.findById(userId);
+      if (!manager || !manager.team) {
+        return res.status(404).json({ message: 'No team found for this manager' });
+      }
+      tasks = await Task.find({ assignedTo: { $in: manager.team } });
+    } else if (userRole === 'user') {
+      // User can view only tasks assigned to themselves
+      tasks = await Task.find({ assignedTo: userId });
+    } else {
+      return res.status(403).json({ message: 'Access denied' });
     }
 
-    if (priority) {
-      query.priority = priority;
+    if (!tasks || tasks.length === 0) {
+      return res.status(404).json({ message: 'No tasks found' });
     }
 
-    const tasks = await Task.find(query).sort(sortBy ? { [sortBy]: 1 } : { createdAt: -1 });
     res.status(200).json({ tasks });
   } catch (err) {
-    res.status(500).json({ message: 'Error retrieving tasks', error: err.message });
+    res.status(500).json({ message: 'Error retrieving assigned tasks', error: err.message });
   }
 };
 
-// Update Task
 export const updateTask = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, description, dueDate, priority, status } = req.body;
+    const userId = req.user.id;
+    const userRole = req.user.roles[0]; // Assuming roles array contains one role, adjust if needed
 
-    const task = await Task.findOneAndUpdate(
-      { _id: id, user: req.user.id }, // Ensure only the user who created the task can update it
-      { title, description, dueDate, priority, status },
-      { new: true }
-    );
+    const task = await Task.findById(id);
 
     if (!task) {
-      return res.status(404).json({ message: 'Task not found or you do not have permission' });
+      return res.status(404).json({ message: 'Task not found' });
     }
 
-    res.status(200).json({ message: 'Task updated successfully', task });
+    // Admin can update any task
+    if (userRole === 'admin') {
+      task.title = title || task.title;
+      task.description = description || task.description;
+      task.dueDate = dueDate || task.dueDate;
+      task.priority = priority || task.priority;
+      task.status = status || task.status;
+      await task.save();
+
+      return res.status(200).json({ message: 'Task updated successfully', task });
+    }
+
+    // Manager can only update tasks assigned to their team members
+    if (userRole === 'manager') {
+      const manager = await User.findById(userId);
+      if (!manager || !manager.team) {
+        return res.status(404).json({ message: 'No team found for this manager' });
+      }
+
+      if (!manager.team.includes(task.assignedTo.toString())) {
+        return res.status(403).json({ message: 'You can only update tasks assigned to your team members' });
+      }
+
+      task.title = title || task.title;
+      task.description = description || task.description;
+      task.dueDate = dueDate || task.dueDate;
+      task.priority = priority || task.priority;
+      task.status = status || task.status;
+      await task.save();
+
+      return res.status(200).json({ message: 'Task updated successfully', task });
+    }
+
+    // User can only update their own tasks
+    if (userRole === 'user' && task.assignedTo.toString() === userId) {
+      task.title = title || task.title;
+      task.description = description || task.description;
+      task.dueDate = dueDate || task.dueDate;
+      task.priority = priority || task.priority;
+      task.status = status || task.status;
+      await task.save();
+
+      return res.status(200).json({ message: 'Task updated successfully', task });
+    }
+
+    return res.status(403).json({ message: 'You are not authorized to update this task' });
   } catch (err) {
     res.status(500).json({ message: 'Error updating task', error: err.message });
   }
@@ -74,15 +129,41 @@ export const updateTask = async (req, res) => {
 export const deleteTask = async (req, res) => {
   try {
     const { id } = req.params;
+    const userId = req.user.id;
+    const userRole = req.user.roles[0];
 
-    const task = await Task.findOneAndDelete({ _id: id, user: req.user.id });
+    const task = await Task.findById(id);
 
     if (!task) {
-      return res.status(404).json({ message: 'Task not found or you do not have permission' });
+      return res.status(404).json({ message: 'Task not found' });
     }
 
-    res.status(200).json({ message: 'Task deleted successfully' });
+    // Admin can delete any task
+    if (userRole === 'admin') {
+      await Task.findByIdAndDelete(id); 
+      return res.status(200).json({ message: 'Task deleted successfully' });
+    }
+
+    // Manager can only delete tasks assigned to their team members
+    if (userRole === 'manager') {
+      const manager = await User.findById(userId);
+      if (!manager || !manager.team) {
+        return res.status(404).json({ message: 'No team found for this manager' });
+      }
+
+      if (!manager.team.includes(task.assignedTo.toString())) {
+        return res.status(403).json({ message: 'You can only delete tasks assigned to your team members' });
+      }
+
+      await Task.findByIdAndDelete(id); 
+      return res.status(200).json({ message: 'Task deleted successfully' });
+    }
+
+    // Users are not allowed to delete tasks
+    return res.status(403).json({ message: 'You are not authorized to delete this task' });
   } catch (err) {
     res.status(500).json({ message: 'Error deleting task', error: err.message });
   }
 };
+
+

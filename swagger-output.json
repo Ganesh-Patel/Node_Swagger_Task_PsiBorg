@@ -478,11 +478,11 @@
         }
       }
     },
-    "/tasks/user/{userId}": {
+    "/taskAssigen/assigned-tasks": {
       "get": {
         "tags": ["Task Assignment"],
-        "summary": "Get tasks assigned to a user",
-        "description": "Fetch all tasks assigned to a specific user using their user ID.",
+        "summary": "Get All tasks according to role ",
+        "description": "Fetch all assigned tasks ",
         "security": [
           {
             "bearerAuth": []
@@ -518,12 +518,12 @@
         }
       }
     },
-    "/tasks/taskAssigen/unassign": 
+    "/taskAssigen/update-assignment": 
     {
-      "delete": {
+      "put": {
         "tags": ["Task Assignment"],
-        "summary": "Unassign a task from a user",
-        "description": "Remove the assignment of a task from a user.",
+        "summary": "Reassign a task to a different user",
+        "description": "This endpoint allows an admin or manager to reassign a task to a different user. Managers can only reassign tasks to users within their team.",
         "parameters": [
           {
             "in": "body",
@@ -532,14 +532,20 @@
             "schema": {
               "type": "object",
               "properties": {
-                "taskId": { "type": "string", "example": "64a0b4c9d8d1b8e1bda12345" },
-                "userId": { "type": "string", "example": "64a0b4c9d8d1b8e1bda67890" }
+                "taskId": {
+                  "type": "string",
+                  "example": "64a0b4c9d8d1b8e1bda12345"
+                },
+                "newUserId": {
+                  "type": "string",
+                  "example": "64a0b4c9d8d1b8e1bda67890"
+                }
               }
             }
           }
         ],
         "responses": {
-          "200": { "description": "Task unassigned successfully." },
+          "200": { "description": "Task reassigned successfully." },
           "404": { "description": "Task or user not found." },
           "500": { "description": "Server error." }
         }

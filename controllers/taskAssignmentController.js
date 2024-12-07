@@ -3,25 +3,37 @@ import User from '../models/userModel.js';
 // Assign Task to a user
 export const assignTask = async (req, res) => {
   try {
-    const { taskId, userId } = req.body; 
+    const { taskId, userId } = req.body;
 
-    // Fetch the task and user based on the provided IDs
     const task = await Task.findById(taskId);
     const user = await User.findById(userId);
 
-    // Check if the task or user exists
     if (!task || !user) {
       return res.status(404).json({ message: 'Task or User not found' });
     }
 
-    // Check if the user has 'manager' or 'admin' role in the roles array
-    if (!req.user.roles.includes('manager') && !req.user.roles.includes('admin')) {
+    const currentUser = req.user;
+
+    if (!currentUser.roles.includes('admin') && !currentUser.roles.includes('manager')) {
       return res.status(403).json({ message: 'You are not authorized to assign tasks' });
+    }
+
+    // If the user is a manager, ensure they can only assign tasks to their team members
+    if (currentUser.roles.includes('manager')) {
+      if (!currentUser.team.includes(userId)) {
+        return res.status(403).json({ 
+          message: 'Managers can only assign tasks to their team members' 
+        });
+      }
     }
 
     // Assign the task to the user
     task.assignedTo = userId;
     await task.save();
+
+    // Optional: Update the user's assignedTasks array
+    user.assignedTasks.push(taskId);
+    await user.save();
 
     res.status(200).json({ message: 'Task assigned successfully', task });
   } catch (err) {
@@ -33,11 +45,30 @@ export const assignTask = async (req, res) => {
 // View assigned tasks
 export const viewAssignedTasks = async (req, res) => {
   try {
-    const userId = req.user.id; 
-    const tasks = await Task.find({ assignedTo: userId });
+    const userId = req.user.id;
+    const userRole = req.user.roles[0];
 
-    if (!tasks.length) {
-      return res.status(404).json({ message: 'No tasks assigned' });
+    let tasks;
+
+    if (userRole === 'admin') {
+      // Admin can view all tasks
+      tasks = await Task.find({});
+    } else if (userRole === 'manager') {
+      // Manager can view tasks assigned to their team members
+      const manager = await User.findById(userId);
+      if (!manager || !manager.team) {
+        return res.status(404).json({ message: 'No team found for this manager' });
+      }
+      tasks = await Task.find({ assignedTo: { $in: manager.team } });
+    } else if (userRole === 'user') {
+      // User can view only tasks assigned to themselves
+      tasks = await Task.find({ assignedTo: userId });
+    } else {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    if (!tasks || tasks.length === 0) {
+      return res.status(404).json({ message: 'No tasks found' });
     }
 
     res.status(200).json({ tasks });
@@ -46,24 +77,41 @@ export const viewAssignedTasks = async (req, res) => {
   }
 };
 
-// Update Task Assignment (e.g., reassign task to a different user)
+
 export const updateTaskAssignment = async (req, res) => {
   try {
-    const { taskId, newUserId } = req.body; 
+    const { taskId, newUserId } = req.body;
     const task = await Task.findById(taskId);
     const newUser = await User.findById(newUserId);
 
     if (!task || !newUser) {
       return res.status(404).json({ message: 'Task or User not found' });
     }
-    if (req.user.role !== 'manager') {
+
+    const currentUser = req.user; 
+
+
+    if (!currentUser.roles.includes('admin') && !currentUser.roles.includes('manager')) {
       return res.status(403).json({ message: 'You are not authorized to reassign tasks' });
     }
+
+    if (currentUser.roles.includes('manager')) {
+      if (!currentUser.team.includes(newUserId)) {
+        return res.status(403).json({ 
+          message: 'Managers can only reassign tasks to their team members' 
+        });
+      }
+    }
+
     task.assignedTo = newUserId;
     await task.save();
+
+    newUser.assignedTasks.push(taskId);
+    await newUser.save();
 
     res.status(200).json({ message: 'Task reassigned successfully', task });
   } catch (err) {
     res.status(500).json({ message: 'Error updating task assignment', error: err.message });
   }
 };
+

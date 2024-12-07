@@ -14,10 +14,25 @@ const userSchema = new mongoose.Schema({
           required: true },
     roles: { 
         type: [String], 
-        default: ['User'] },
-        createdAt: { type: Date, default: Date.now }
-
-});
+        default: ['User'] 
+    },
+      team: [
+            {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: 'User', // Reference to other users
+            },
+          ],
+          
+          assignedTasks: [
+            {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: 'Task', // Reference to Task model
+            },
+          ],
+        },
+        { timestamps: true }
+        
+    );
 
 const User = mongoose.model('User', userSchema);
 
