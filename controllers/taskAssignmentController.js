@@ -69,7 +69,7 @@ export const viewAssignedTasks = async (req, res) => {
       const startOfDay = parsedDate.startOf('day').toDate();  // Start of the day
       const endOfDay = parsedDate.endOf('day').toDate();  // End of the day
 
-      tasksQuery.dueDate = { $gte: startOfDay, $lte: endOfDay };
+      query.dueDate = { $gte: startOfDay, $lte: endOfDay };
     }
 
     // If there's a search term, search in title, status, and priority
