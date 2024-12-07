@@ -16,7 +16,7 @@ export const createTask = async (req, res) => {
       dueDate,
       priority,
       status,
-      user: req.user.id, // Assuming `req.user` is populated from authentication middleware
+      createdBy: req.user.id,
     });
 
     await newTask.save();
