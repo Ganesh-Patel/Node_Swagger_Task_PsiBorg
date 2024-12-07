@@ -143,6 +143,6 @@ userRoutes.post('/logout', authenticateUser, logoutUser);
  *       500:
  *         description: Internal server error
  */
-userRoutes.get('/profile', authenticateUser, authorizeRoles('admin'), getUserProfile);
+userRoutes.get('/profile', authenticateUser, authorizeRoles('admin','manager','user'), getUserProfiles);
 
 export default userRoutes;

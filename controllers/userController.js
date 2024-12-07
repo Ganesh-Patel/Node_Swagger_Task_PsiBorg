@@ -72,29 +72,38 @@ export const logoutUser = (req, res) => {
 };
 
 // Get User Profile
-export const getUserProfile = async (req, res) => {
-    const token = req.headers.authorization?.split(' ')[1];
-
-    if (!token) {
-        return res.status(403).json({ message: 'No token provided' });
-    }
-
+export const getUserProfiles = async (req, res) => {
     try {
-        const decoded = jwt.verify(token, process.env.SECRET);
-        const user = await User.findById(decoded.userId);
-
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+      const userId = req.user.id;  
+      const userRole = req.user.roles[0]; 
+  
+      let users;
+  
+      if (userRole === 'admin') {
+        users = await User.find(); 
+      } else if (userRole === 'manager') {
+        const manager = await User.findById(userId);
+        if (!manager || !manager.team) {
+          return res.status(404).json({ message: 'No team found for this manager' });
         }
-
-        res.json({
-            username: user.username,
-            email: user.email,
-            roles: user.roles
+        users = await User.find({
+          _id: { $in: manager.team }, 
         });
-    } catch (error) {
-        res.status(401).json({ message: 'Unauthorized' });
+      } else if (userRole === 'user') {
+        users = await User.findById(userId); 
+      } else {
+        return res.status(403).json({ message: 'Access denied' }); 
+      }
+  
+      if (!users || (Array.isArray(users) && users.length === 0)) {
+        return res.status(404).json({ message: 'No profiles found' });
+      }
+  
+      res.status(200).json({ users });
+  
+    } catch (err) {
+      res.status(500).json({ message: 'Error retrieving user profiles', error: err.message });
     }
-};
+  };
 
 
