@@ -458,16 +458,55 @@
         }
       }
     },
-    "/taskAssigen/assigned-tasks": {
-      "get": {
-        "tags": ["Task Assignment"],
-        "summary": "Get All tasks according to role ",
-        "description": "Fetch all assigned tasks ",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
+  "/taskAssigen/assigned-tasks": {
+  "get": {
+    "tags": ["Task Assignment"],
+    "summary": "Get Assigned Tasks with Filters and Search",
+    "description": "Fetch all assigned tasks based on the user's role and optional filters such as status, priority, due date, and search term.",
+    "parameters": [
+      {
+        "name": "status",
+        "in": "query",
+        "description": "Filter tasks by status (e.g., 'pending', 'completed')",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "priority",
+        "in": "query",
+        "description": "Filter tasks by priority (e.g., 'high', 'medium', 'low')",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "dueDate",
+        "in": "query",
+        "description": "Filter tasks by due date. Format: 'YYYY-MM-DD'. Only tasks due on or before this date will be included.",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      {
+        "name": "searchTerm",
+        "in": "query",
+        "description": "Search term to filter tasks by title, status, or priority. Performs case-insensitive search.",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+      ],
         "responses": {
           "200": {
             "description": "Tasks retrieved successfully.",

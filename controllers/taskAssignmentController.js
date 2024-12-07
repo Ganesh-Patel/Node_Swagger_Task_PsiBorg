@@ -48,21 +48,50 @@ export const viewAssignedTasks = async (req, res) => {
     const userId = req.user.id;
     const userRole = req.user.roles[0];
 
+    const { status, priority, dueDate, searchTerm } = req.query;
+
+    let query = {};
+    if (status) {
+      query.status = status;
+    }
+    if (priority) {
+      query.priority = priority;
+    }
+    if (dueDate) {
+      const dueDateObj = new Date(dueDate);
+      query.dueDate = { $lte: dueDateObj }; 
+    }
+
+    // If there's a search term, search in title, status, and priority
+    if (searchTerm) {
+      query.$or = [
+        { title: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search in title
+        { status: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search in status
+        { priority: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search in priority
+      ];
+    }
+
     let tasks;
 
     if (userRole === 'admin') {
       // Admin can view all tasks
-      tasks = await Task.find({});
+      tasks = await Task.find(query);
     } else if (userRole === 'manager') {
       // Manager can view tasks assigned to their team members
       const manager = await User.findById(userId);
       if (!manager || !manager.team) {
         return res.status(404).json({ message: 'No team found for this manager' });
       }
-      tasks = await Task.find({ assignedTo: { $in: manager.team } });
+      tasks = await Task.find({
+        assignedTo: { $in: manager.team },
+        ...query,
+      });
     } else if (userRole === 'user') {
       // User can view only tasks assigned to themselves
-      tasks = await Task.find({ assignedTo: userId });
+      tasks = await Task.find({
+        assignedTo: userId,
+        ...query,
+      });
     } else {
       return res.status(403).json({ message: 'Access denied' });
     }
