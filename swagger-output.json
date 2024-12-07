@@ -93,13 +93,9 @@
         "tags": ["User Authentication"],
         "summary": "Logout a user.",
         "description": "Invalidate the user's current JWT token.",
-        "parameters": [
+        "security": [
           {
-            "in": "header",
-            "name": "Authorization",
-            "type": "string",
-            "required": true,
-            "description": "Bearer token for authorization."
+            "bearerAuth": []
           }
         ],
         "responses": {
@@ -114,16 +110,9 @@
         "summary": "Get User Profile",
         "tags": ["User Authentication"],
         "description": "Retrieve the profile details of the logged-in user.",
-        "parameters": [
+        "security": [
           {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Bearer token for authentication",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Bearer token_here"
-            }
+            "bearerAuth": []
           }
         ],
         "responses": {
@@ -506,6 +495,11 @@
         "tags": ["Task Assignment"],
         "summary": "Reassign a task to a different user",
         "description": "This endpoint allows an admin or manager to reassign a task to a different user. Managers can only reassign tasks to users within their team.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "body",
