@@ -51,7 +51,10 @@ export const deleteUser = async (req, res) => {
     try {
       const { id } = req.params;
   
-      const user = await User.findById(id);
+      const user = await User.findById(id)
+      .populate('team', 'username email roles')  // Populate the team details (only username, email, and roles for now)
+      .populate('assignedTasks', 'title description status dueDate')  // Populate the assigned tasks (only task-related fields)
+      .exec();
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
