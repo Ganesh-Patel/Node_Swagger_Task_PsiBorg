@@ -15,6 +15,6 @@ taskRoutes.get('/', authenticateUser,authorizeRoles('admin','manager','user'), g
 taskRoutes.put('/:id', authenticateUser,authorizeRoles('admin','manager','user'), updateTask);
 
 // Delete Task
-taskRoutes.delete('/:id', authenticateUser,authorizeRoles('admin','manager'), deleteTask);
+taskRoutes.delete('/delete/:id', authenticateUser,authorizeRoles('admin','manager'), deleteTask);
 
 export default taskRoutes;

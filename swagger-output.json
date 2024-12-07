@@ -427,6 +427,34 @@
         }
       }
     },
+    
+    "/tasks/delete/{id}": {
+      "delete": {
+        "tags": ["Tasks Management"],
+        "summary": "Delete a task",
+        "description": "Delete a task by id only admin and manager can delete the  tasks ",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the task to be updated."
+          }
+        
+        ],
+        "responses": {
+          "200": { "description": "Task updated successfully." },
+          "404": { "description": "Task not found." },
+          "500": { "description": "Server error." }
+        }
+      }
+    },
     "/taskAssigen/assign": {
       "post": {
         "tags": ["Task Assignment"],
