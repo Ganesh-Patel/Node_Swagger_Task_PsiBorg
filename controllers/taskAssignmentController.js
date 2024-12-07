@@ -1,5 +1,6 @@
 import Task from '../models/taskModel.js';
 import User from '../models/userModel.js'; 
+import moment from 'moment';
 // Assign Task to a user
 export const assignTask = async (req, res) => {
   try {
@@ -58,8 +59,17 @@ export const viewAssignedTasks = async (req, res) => {
       query.priority = priority;
     }
     if (dueDate) {
-      const dueDateObj = new Date(dueDate);
-      query.dueDate = { $lte: dueDateObj }; 
+      // Use moment.js to parse the date in DD-MM-YYYY format
+      const parsedDate = moment(dueDate, 'DD-MM-YYYY');
+      if (!parsedDate.isValid()) {
+        return res.status(400).json({ message: 'Invalid date format. Please use DD-MM-YYYY.' });
+      }
+      
+      // Set the start of the day (00:00:00) and the end of the day (23:59:59)
+      const startOfDay = parsedDate.startOf('day').toDate();  // Start of the day
+      const endOfDay = parsedDate.endOf('day').toDate();  // End of the day
+
+      tasksQuery.dueDate = { $gte: startOfDay, $lte: endOfDay };
     }
 
     // If there's a search term, search in title, status, and priority
