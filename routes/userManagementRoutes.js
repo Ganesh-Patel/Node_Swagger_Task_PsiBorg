@@ -8,6 +8,7 @@ import {
   getAllUsers, 
   changeUserRole 
 } from '../controllers/userManagementController.js';
+import { roleBasedRateLimiter } from '../middlewares/roleBasedRateLimiter.js';
 
 const userManagementRoutes = express.Router();
 
@@ -49,7 +50,7 @@ const userManagementRoutes = express.Router();
  *       500:
  *         description: Internal server error
  */
-userManagementRoutes.post('/add-user', authenticateUser, authorizeRoles('admin'), addUser);
+userManagementRoutes.post('/add-user', authenticateUser, authorizeRoles('admin'),roleBasedRateLimiter, addUser);
 
 /**
  * @swagger
@@ -73,7 +74,7 @@ userManagementRoutes.post('/add-user', authenticateUser, authorizeRoles('admin')
  *       500:
  *         description: Internal server error
  */
-userManagementRoutes.delete('/delete-user/:id', authenticateUser, authorizeRoles('admin'), deleteUser);
+userManagementRoutes.delete('/delete-user/:id', authenticateUser, authorizeRoles('admin'),roleBasedRateLimiter, deleteUser);
 
 /**
  * @swagger
@@ -97,7 +98,7 @@ userManagementRoutes.delete('/delete-user/:id', authenticateUser, authorizeRoles
  *       500:
  *         description: Internal server error
  */
-userManagementRoutes.get('/user/:id', authenticateUser, authorizeRoles('admin'), getUserById);
+userManagementRoutes.get('/user/:id', authenticateUser, authorizeRoles('admin'),roleBasedRateLimiter, getUserById);
 
 /**
  * @swagger
@@ -113,7 +114,7 @@ userManagementRoutes.get('/user/:id', authenticateUser, authorizeRoles('admin'),
  *       500:
  *         description: Internal server error
  */
-userManagementRoutes.get('/users', authenticateUser, authorizeRoles('admin'), getAllUsers);
+userManagementRoutes.get('/users', authenticateUser, authorizeRoles('admin'),roleBasedRateLimiter, getAllUsers);
 
 /**
  * @swagger
@@ -147,6 +148,6 @@ userManagementRoutes.get('/users', authenticateUser, authorizeRoles('admin'), ge
  *       500:
  *         description: Internal server error
  */
-userManagementRoutes.put('/change-role/:id', authenticateUser, authorizeRoles('admin'), changeUserRole);
+userManagementRoutes.put('/change-role/:id', authenticateUser, authorizeRoles('admin'),roleBasedRateLimiter, changeUserRole);
 
 export default userManagementRoutes;

@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
           required: true },
     roles: { 
         type: [String], 
-        default: ['User'] 
+        default: ['user'] 
     },
       team: [
             {
@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
               ref: 'User', // Reference to other users
             },
           ],
-          
+
           assignedTasks: [
             {
               type: mongoose.Schema.Types.ObjectId,
