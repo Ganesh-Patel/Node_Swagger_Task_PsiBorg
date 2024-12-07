@@ -365,7 +365,7 @@
     "/tasks/": {
       "get": {
         "tags": ["Tasks Management"],
-        "summary": "Retrieve task details by ID",
+        "summary": "Retrieve task details ",
         "description": "Fetch details of a specific task using its ID.",
         "security": [
           {
@@ -374,11 +374,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "The ID of the task."
+            
           }
         ],
         "responses": {
@@ -490,11 +486,7 @@
         ],
         "parameters": [
           {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "The ID of the user."
+        
           }
         ],
         "responses": {
